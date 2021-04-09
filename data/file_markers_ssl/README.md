@@ -1,0 +1,3 @@
+This folder contains file markers for train/validation/test sets for **self-supervised pre-training**, and pre-computed mean and standard deviation of the training data.
+
+In each of the text files, each line represents `<edf-file-name>_<prev-clip-index>.h5, <edf-file-name>_<next-clip-index>.h5`, where `<prev-clip-index>` indicates the index of the previous EEG clip in the edf file, `<prev-clip-index>` indicates the index of the subsequent EEG clip being predicted in the self-supervised pre-training task.
