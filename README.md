@@ -1,15 +1,15 @@
-# Automated Seizure Detection and Seizure Type Classification From Electroencephalography With a Graph Neural Network and Self-Supervised Pre-Training
+# Automated Seizure Detection and Seizure Type Classification From EEG With a Graph Neural Network and Self-Supervised Pre-Training
 
-Siyi Tang, Jared A. Dunnmon, Khaled Saab, Xuan Zhang, Qianying Huang, Florian Dubost, Daniel L. Rubin*, Christopher Lee-Messer*, ARXIV-LINK-TO-BE-ADDED
+Siyi Tang, Jared A. Dunnmon, Khaled Saab, Xuan Zhang, Qianying Huang, Florian Dubost, Daniel L. Rubin, Christopher Lee-Messer, ARXIV-LINK-TO-BE-ADDED
 
 ---
 ## Data
 
 We use the Temple University Seizure Corpus (TUSZ) v1.5.2 in this study. The TUSZ dataset is publicly available [here](https://www.isip.piconepress.com/projects/tuh_eeg/html/downloads.shtml). After you have registered and downloaded the data, you will see a subdirectory called `edf` which contains all the EEG signals and their associated labels. We use the EEG files in the `edf/dev` subfolder as our held-out test set. We further split the EEG files in the `edf/train` subfolder into train and validation sets by patients. See folders `./data/file_markers_detection`, `./data/file_markers_classification`, and `./data/file_markers_ssl` for details.
 
-In this study, we exclude five patients from the test set who exist in both the official TUSZ train and test sets. You can find the list of excluded patients' IDs in `data_tusz/excluded_test_patients.txt`.
+In this study, we exclude five patients from the test set who exist in both the official TUSZ train and test sets. You can find the list of excluded patients' IDs in `./data_tusz/excluded_test_patients.txt`.
 
-In addition, `data_tusz/focal_labeled_as_generalized.csv` provides the list of 28 seizures in the test set that we think are **focal seizures** (manually analyzed by a board-certified neurologist) but are labeled as **generalized non-specific seizures** in TUSZ data. See our paper for more details.
+In addition, `./data_tusz/focal_labeled_as_generalized.csv` provides the list of 28 seizures in the test set that we think are **focal seizures** (manually analyzed by a board-certified EEG reader) but are labeled as **generalized non-specific seizures** in TUSZ data. See our paper for more details.
 
 ---
 
@@ -33,7 +33,7 @@ python ./data/resample_signals.py --raw_edf_dir <tusz-data-dir> --save_dir <resa
 where `<tusz-data-dir>` is the directory where the downloaded TUSZ v1.5.2 data are located, and `<resampled-dir>` is the directory where the resampled signals will be saved.
 
 #### Optional Preprocessing
-Note that the remaining preprocessing step in our paper---Fourier transform on sliding window, is handled by dataloaders. You can (optionally) perform this preprocessing step prior to model training to accelerate the training speed.
+Note that the remaining preprocessing step in our paper --- Fourier transform on short sliding windows, is handled by dataloaders. You can (optionally) perform this preprocessing step prior to model training to accelerate the training.
 
 Preprocessing for seizure detection and self-supervised pre-training:
 ```
@@ -78,7 +78,7 @@ Similarly, `<clip-len>` is 60 or 12. To use **correlation-based EEG graph**, spe
 
 
 ### Fine-Tuning for Seizure Detection & Seizure Type Classification
-To fine-tune seizure detection/seizure type classification models from self-supervised NTP pre-training, **add** the following additional arguments:
+To fine-tune seizure detection/seizure type classification models from self-supervised pre-training, **add** the following additional arguments:
 ```
 --fine_tune --load_model_path <pretrained-model-checkpoint>
 ```
