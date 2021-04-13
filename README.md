@@ -3,6 +3,11 @@
 Siyi Tang, Jared A. Dunnmon, Khaled Saab, Xuan Zhang, Qianying Huang, Florian Dubost, Daniel L. Rubin, Christopher Lee-Messer, ARXIV-LINK-TO-BE-ADDED
 
 ---
+
+## Background
+Automated seizure detection and classification from electroencephalography (EEG) can greatly improve the diagnosis and treatment of seizures. While prior studies mainly used convolutional neural networks (CNNs) that assume image-like structure in EEG signals or spectrograms, this modeling choice does not reflect the natural geometry of or connectivity between EEG electrodes. In this study, we propose **modeling EEGs as graphs** and present a graph neural network for automated seizure detection and classification. In addition, we leverage unlabeled EEG data using a **self-supervised pre-training** strategy. In summary, our graph-based modeling approach integrates domain knowledge about EEG, sets a new state-of-the-art for seizure detection and classification on a large public dataset, and provides better ability to identify seizure regions.
+
+---
 ## Data
 
 We use the Temple University Seizure Corpus (TUSZ) v1.5.2 in this study. The TUSZ dataset is publicly available [here](https://www.isip.piconepress.com/projects/tuh_eeg/html/downloads.shtml). After you have registered and downloaded the data, you will see a subdirectory called `edf` which contains all the EEG signals and their associated labels. We use the EEG files in the `edf/dev` subfolder as our held-out test set. We further split the EEG files in the `edf/train` subfolder into train and validation sets by patients. See folders `./data/file_markers_detection`, `./data/file_markers_classification`, and `./data/file_markers_ssl` for details.
@@ -47,6 +52,14 @@ python ./data/preprocess_classification.py --resampled_dir <resampled-dir> --raw
 ```
 
 ---
+
+## EEG Graph Visualization
+
+For distance-based EEG graph, we provide the pre-computed adjacency matrix in `./data/electrode_graph`. For correlation-based EEG graphs, adjacency matrices can be obtained from the respective dataloaders in `./data`.
+
+We also provide helper functions in `./graph_viz/graph_viz_utils.py` to visualize the EEG graphs. See notebook `./graph_viz/eeg_graph_visualization.ipynb` for examples of graph visualization.
+
+---
 ## Experiments
 
 ### Seizure Detection
@@ -84,11 +97,6 @@ To fine-tune seizure detection/seizure type classification models from self-supe
 ```
 
 In addition, we provide pretrained model checkpoints in the folder `pretrained`.
-
----
-## EEG Graph Visualization
-
-We provide helper functions in `./graph_viz/graph_viz_utils.py` to visualize the EEG graphs. See notebook `./graph_viz/eeg_graph_visualization.ipynb` for examples of graph visualization.
 
 ---
 
