@@ -9,7 +9,7 @@ We use the Temple University Seizure Corpus (TUSZ) v1.5.2 in this study. The TUS
 
 In this study, we exclude five patients from the test set who exist in both the official TUSZ train and test sets. You can find the list of excluded patients' IDs in `./data_tusz/excluded_test_patients.txt`.
 
-In addition, `./data_tusz/focal_labeled_as_generalized.csv` provides the list of 28 seizures in the test set that we think are **focal seizures** (manually analyzed by a board-certified EEG reader) but are labeled as **generalized non-specific seizures** in TUSZ data. See our paper for more details.
+In addition, `./data_tusz/focal_labeled_as_generalized.csv` provides the list of 27 seizures in the test set that we think are **focal seizures** (manually analyzed by a board-certified EEG reader) but are labeled as **generalized non-specific seizures** in TUSZ data. See our paper for more details.
 
 ---
 
