@@ -1,6 +1,6 @@
 # Automated Seizure Detection and Seizure Type Classification From EEG With a Graph Neural Network and Self-Supervised Pre-Training
 
-Siyi Tang, Jared A. Dunnmon, Khaled Saab, Xuan Zhang, Qianying Huang, Florian Dubost, Daniel L. Rubin, Christopher Lee-Messer, ARXIV-LINK-TO-BE-ADDED
+Siyi Tang, Jared A. Dunnmon, Khaled Saab, Xuan Zhang, Qianying Huang, Florian Dubost, Daniel L. Rubin, Christopher Lee-Messer, *arXiv*, https://arxiv.org/abs/2104.08336
 
 ---
 
@@ -103,5 +103,10 @@ In addition, we provide pretrained model checkpoints in the folder `pretrained`.
 ## Reference
 If you use this codebase, or otherwise find our work valuable, please cite:
 ```
-BIBTEX TO BE ADDED
+@article{tang2021automated,
+      title={Automated Seizure Detection and Seizure Type Classification From Electroencephalography With a Graph Neural Network and Self-Supervised Pre-Training}, 
+      author={Siyi Tang and Jared A. Dunnmon and Khaled Saab and Xuan Zhang and Qianying Huang and Florian Dubost and Daniel L. Rubin and Christopher Lee-Messer},
+      year={2021},
+      journal={arXiv preprint arXiv:2104.08336}
+}
 ```
