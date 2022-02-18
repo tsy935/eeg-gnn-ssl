@@ -6,7 +6,9 @@ Siyi Tang, Jared A. Dunnmon, Khaled Saab, Xuan Zhang, Qianying Huang, Florian Du
 
 ## Background
 Automated seizure detection and classification from electroencephalography (EEG) can greatly improve seizure diagnosis and treatment. However, several modeling challenges remain unaddressed in prior automated seizure detection and classification studies: (1) representing non-Euclidean data structure in EEGs, (2) accurately classifying rare seizure types, and (3) lacking a quantitative interpretability approach to measure model ability to localize seizures. In this study, we address these challenges by (1) representing the **spatiotemporal dependencies** in EEGs using a **graph neural network (GNN)** and proposing two EEG graph
-structures that capture the electrode geometry or dynamic brain connectivity, (2) proposing a **self-supervised pre-training** method that predicts preprocessed signals for the next time period to further improve model performance, particularly on rare seizure types, and (3) proposing a *quantitative model interpretability* approach to assess a model’s ability to localize seizures within EEGs.
+structures that capture the electrode geometry or dynamic brain connectivity, (2) proposing a **self-supervised pre-training** method that predicts preprocessed signals for the next time period to further improve model performance, particularly on rare seizure types, and (3) proposing a quantitative model interpretability approach to assess a model’s ability to localize seizures within EEGs.
+
+<p align="center"><img src="figure/overview.jpg" alt="drawing" width="800"/></p>
 
 ---
 ## Data
