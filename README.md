@@ -1,11 +1,12 @@
-# Automated Seizure Detection and Seizure Type Classification From EEG With a Graph Neural Network and Self-Supervised Pre-Training
+# Self-Supervised Graph Neural Networks for Improved Electroencephalographic Seizure Analysis
 
-Siyi Tang, Jared A. Dunnmon, Khaled Saab, Xuan Zhang, Qianying Huang, Florian Dubost, Daniel L. Rubin, Christopher Lee-Messer, *arXiv*, https://arxiv.org/abs/2104.08336
+Siyi Tang, Jared A. Dunnmon, Khaled Saab, Xuan Zhang, Qianying Huang, Florian Dubost, Daniel L. Rubin, Christopher Lee-Messer. *International Conference on Learning Representations, 2022*. https://openreview.net/pdf?id=k9bx1EfHI_-
 
 ---
 
 ## Background
-Automated seizure detection and classification from electroencephalography (EEG) can greatly improve the diagnosis and treatment of seizures. While prior studies mainly used convolutional neural networks (CNNs) that assume image-like structure in EEG signals or spectrograms, this modeling choice does not reflect the natural geometry of or connectivity between EEG electrodes. In this study, we propose **modeling EEGs as graphs** and present a graph neural network for automated seizure detection and classification. In addition, we leverage unlabeled EEG data using a **self-supervised pre-training** strategy. In summary, our graph-based modeling approach integrates domain knowledge about EEG, sets a new state-of-the-art for seizure detection and classification on a large public dataset, and provides better ability to identify seizure regions.
+Automated seizure detection and classification from electroencephalography (EEG) can greatly improve seizure diagnosis and treatment. However, several modeling challenges remain unaddressed in prior automated seizure detection and classification studies: (1) representing non-Euclidean data structure in EEGs, (2) accurately classifying rare seizure types, and (3) lacking a quantitative interpretability approach to measure model ability to localize seizures. In this study, we address these challenges by (1) representing the **spatiotemporal dependencies** in EEGs using a **graph neural network (GNN)** and proposing two EEG graph
+structures that capture the electrode geometry or dynamic brain connectivity, (2) proposing a **self-supervised pre-training** method that predicts preprocessed signals for the next time period to further improve model performance, particularly on rare seizure types, and (3) proposing a *quantitative model interpretability* approach to assess a model’s ability to localize seizures within EEGs.
 
 ---
 ## Data
@@ -103,10 +104,12 @@ In addition, we provide pretrained model checkpoints in the folder `pretrained`.
 ## Reference
 If you use this codebase, or otherwise find our work valuable, please cite:
 ```
-@article{tang2021automated,
-      title={Automated Seizure Detection and Seizure Type Classification From Electroencephalography With a Graph Neural Network and Self-Supervised Pre-Training}, 
-      author={Siyi Tang and Jared A. Dunnmon and Khaled Saab and Xuan Zhang and Qianying Huang and Florian Dubost and Daniel L. Rubin and Christopher Lee-Messer},
-      year={2021},
-      journal={arXiv preprint arXiv:2104.08336}
+@inproceedings{
+tang2022selfsupervised,
+title={Self-Supervised Graph Neural Networks for Improved Electroencephalographic Seizure Analysis},
+author={Siyi Tang and Jared Dunnmon and Khaled Kamal Saab and Xuan Zhang and Qianying Huang and Florian Dubost and Daniel Rubin and Christopher Lee-Messer},
+booktitle={International Conference on Learning Representations},
+year={2022},
+url={https://openreview.net/forum?id=k9bx1EfHI_-}
 }
 ```
