@@ -101,6 +101,9 @@ To fine-tune seizure detection/seizure type classification models from self-supe
 
 In addition, we provide pretrained model checkpoints in the folder `pretrained`.
 
+### Baselines
+Example scripts to run baseline models are provided in `baseline_scripts`.
+
 ---
 
 ## Reference

@@ -1,0 +1,7 @@
+{
+    "type": "dense_inception",
+    "dropout_rate": 0.2,
+    "num_inception_layers": 5,
+    "num_channels": 10,
+    "use_batchnorm": 0
+}

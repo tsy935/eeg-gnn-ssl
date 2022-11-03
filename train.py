@@ -11,11 +11,15 @@ import utils
 from data.data_utils import *
 from data.dataloader_detection import load_dataset_detection
 from data.dataloader_classification import load_dataset_classification
+from data.dataloader_densecnn_classification import load_dataset_densecnn_classification
 from constants import *
 from args import get_args
 from collections import OrderedDict
 from json import dumps
 from model.model import DCRNNModel_classification, DCRNNModel_nextTimePred
+from model.densecnn import DenseCNN
+from model.lstm import LSTMModel
+from model.cnnlstm import CNN_LSTM
 from tensorboardX import SummaryWriter
 from tqdm import tqdm
 from dotted_dict import DottedDict
@@ -67,30 +71,59 @@ def main(args):
             seed=123,
             preproc_dir=args.preproc_dir)
     elif args.task == 'classification':
-        dataloaders, _, scaler = load_dataset_classification(
-            input_dir=args.input_dir,
-            raw_data_dir=args.raw_data_dir,
-            train_batch_size=args.train_batch_size,
-            test_batch_size=args.test_batch_size,
-            time_step_size=args.time_step_size,
-            max_seq_len=args.max_seq_len,
-            standardize=True,
-            num_workers=args.num_workers,
-            padding_val=0.,
-            augmentation=args.data_augment,
-            adj_mat_dir='./data/electrode_graph/adj_mx_3d.pkl',
-            graph_type=args.graph_type,
-            top_k=args.top_k,
-            filter_type=args.filter_type,
-            use_fft=args.use_fft,
-            preproc_dir=args.preproc_dir)
+        if args.model_name != 'densecnn':
+            dataloaders, _, scaler = load_dataset_classification(
+                input_dir=args.input_dir,
+                raw_data_dir=args.raw_data_dir,
+                train_batch_size=args.train_batch_size,
+                test_batch_size=args.test_batch_size,
+                time_step_size=args.time_step_size,
+                max_seq_len=args.max_seq_len,
+                standardize=True,
+                num_workers=args.num_workers,
+                padding_val=0.,
+                augmentation=args.data_augment,
+                adj_mat_dir='./data/electrode_graph/adj_mx_3d.pkl',
+                graph_type=args.graph_type,
+                top_k=args.top_k,
+                filter_type=args.filter_type,
+                use_fft=args.use_fft,
+                preproc_dir=args.preproc_dir)
+        else:
+            print("Using densecnn dataloader!")
+            dataloaders, _, scaler = load_dataset_densecnn_classification(
+                input_dir=args.input_dir,
+                raw_data_dir=args.raw_data_dir,
+                train_batch_size=args.train_batch_size,
+                test_batch_size=args.test_batch_size,
+                max_seq_len=args.max_seq_len,
+                standardize=True,
+                num_workers=args.num_workers,
+                padding_val=0.,
+                augmentation=args.data_augment,
+                use_fft=args.use_fft,
+                preproc_dir=args.preproc_dir
+            )
     else:
         raise NotImplementedError
 
     # Build model
     log.info('Building model...')
-    model = DCRNNModel_classification(
-        args=args, num_classes=args.num_classes, device=device)
+    if args.model_name == "dcrnn":
+        model = DCRNNModel_classification(
+            args=args, num_classes=args.num_classes, device=device)
+    elif args.model_name == "densecnn":
+        with open("./model/dense_inception/params.json", "r") as f:
+            params = json.load(f)
+        params = DottedDict(params)
+        data_shape = (args.max_seq_len*100, args.num_nodes) if args.use_fft else (args.max_seq_len*200, args.num_nodes)
+        model = DenseCNN(params, data_shape=data_shape, num_classes=args.num_classes)
+    elif args.model_name == "lstm":
+        model = LSTMModel(args, args.num_classes, device)
+    elif args.model_name == "cnnlstm":
+        model = CNN_LSTM(args.num_classes)
+    else:
+        raise NotImplementedError
 
     if args.do_train:
         if not args.fine_tune:
@@ -221,9 +254,17 @@ def train(model, dataloaders, args, device, save_dir, log, tbx):
 
                 # Forward
                 # (batch_size, num_classes)
-                logits = model(x, seq_lengths, supports)
+                if args.model_name == "dcrnn":
+                    logits = model(x, seq_lengths, supports)
+                elif args.model_name == "densecnn":
+                    x = x.transpose(-1, -2).reshape(batch_size, -1, args.num_nodes) # (batch_size, seq_len, num_nodes)
+                    logits = model(x)
+                elif args.model_name == "lstm" or args.model_name == "cnnlstm":
+                    logits = model(x, seq_lengths)
+                else:
+                    raise NotImplementedError
                 if logits.shape[-1] == 1:
-                    logits = logits.view(-1)  # (batch_size,)
+                    logits = logits.view(-1)  # (batch_size,)                
                 loss = loss_fn(logits, y)
                 loss_val = loss.item()
 
@@ -324,9 +365,17 @@ def evaluate(
 
             # Forward
             # (batch_size, num_classes)
-            logits = model(x, seq_lengths, supports)
+            if args.model_name == "dcrnn":
+                logits = model(x, seq_lengths, supports)
+            elif args.model_name == "densecnn":
+                x = x.transpose(-1, -2).reshape(batch_size, -1, args.num_nodes) # (batch_size, len*freq, num_nodes)
+                logits = model(x)
+            elif args.model_name == "lstm" or args.model_name == "cnnlstm":
+                logits = model(x, seq_lengths)
+            else:
+                raise NotImplementedError
 
-            if logits.shape[-1] == 1:  # binary detection
+            if args.num_classes == 1:  # binary detection
                 logits = logits.view(-1)  # (batch_size,)
                 y_prob = torch.sigmoid(logits).cpu().numpy()  # (batch_size, )
                 y_true = y.cpu().numpy().astype(int)
